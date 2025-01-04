@@ -39,25 +39,29 @@ function Home({ navigation }) {
           data={categories}
           numColumns={2} // 2열로 배치
           keyExtractor={(item) => item.id.toString()}
-          columnWrapperStyle={{ justifyContent: 'space-around' }} // 아이템 간격 조정
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+          }}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={{ alignItems: 'center', marginBottom: 20 }}
-              onPress={() => navigation.navigate('카테고리', { category: item.name })}
+              style={{ alignItems: 'center', marginBottom: 30 }}
+              onPress={() => navigation.navigate('Category', { category: item.name })}
             >
               <View
                 style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
+                  width: 110, // 🔹 원 크기 증가
+                  height: 110,
+                  borderRadius: 55,
                   backgroundColor: '#EFEFEF',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  marginHorizontal: 30, // 🔹 버튼 간 좌우 여백 추가
                 }}
               >
-                <Image source={item.image} style={{ width: 70, height: 70, resizeMode: 'contain' }} />
+                <Image source={item.image} style={{ width: 80, height: 80, resizeMode: 'contain' }} />
               </View>
-              <Text style={{ marginTop: 5, fontSize: 16 }}>{item.name}</Text>
+              <Text style={{ marginTop: 10, fontSize: 16 }}>{item.name}</Text> {/* 🔹 여백 증가 */}
             </TouchableOpacity>
           )}
         />

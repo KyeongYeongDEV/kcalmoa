@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87408019647",
+    "project_id": "totalkcal",
+    "storage_bucket": "totalkcal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87408019647:android:8761436195ba28e4ee5e0a",
+        "android_client_info": {
+          "package_name": "com.kcalmoa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfaHalBEU2LmmEwNCey8oXbecf8y9Nwi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

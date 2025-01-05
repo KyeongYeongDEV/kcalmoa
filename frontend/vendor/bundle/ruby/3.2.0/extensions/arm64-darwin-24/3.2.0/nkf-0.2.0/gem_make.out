@@ -1,0 +1,19 @@
+current directory: /Users/ckyeong/Downloads/kcalmoa/vendor/bundle/ruby/3.2.0/gems/nkf-0.2.0/ext/nkf
+/Users/ckyeong/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/ckyeong/Downloads/kcalmoa/vendor/bundle/ruby/3.2.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20250104-85228-p93d3g sitelibdir\=./.gem.20250104-85228-p93d3g clean
+
+current directory: /Users/ckyeong/Downloads/kcalmoa/vendor/bundle/ruby/3.2.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20250104-85228-p93d3g sitelibdir\=./.gem.20250104-85228-p93d3g
+compiling nkf.c
+linking shared-object nkf.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/ckyeong/Downloads/kcalmoa/vendor/bundle/ruby/3.2.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20250104-85228-p93d3g sitelibdir\=./.gem.20250104-85228-p93d3g install
+/usr/bin/install -c -m 0755 nkf.bundle ./.gem.20250104-85228-p93d3g
+
+current directory: /Users/ckyeong/Downloads/kcalmoa/vendor/bundle/ruby/3.2.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20250104-85228-p93d3g sitelibdir\=./.gem.20250104-85228-p93d3g clean

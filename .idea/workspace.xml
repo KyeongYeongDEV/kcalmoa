@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e25f998c-efc1-46ba-aa08-5698c805909d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.bundle/config" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.bundle/config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.eslintrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.eslintrc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.prettierrc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.watchmanconfig" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.watchmanconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Catelory/Category.android.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Catelory/Category.android.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Catelory/Category.ios.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Catelory/Category.ios.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +73,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1735916603921</updated>
-      <workItem from="1735916605673" duration="41405000" />
+      <workItem from="1735916605673" duration="47715000" />
     </task>
     <servers />
   </component>

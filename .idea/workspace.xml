@@ -51,11 +51,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/assets/images" />
       <recent name="$PROJECT_DIR$/frontend" />
       <recent name="$PROJECT_DIR$/src/assets/model/cafe" />
       <recent name="$PROJECT_DIR$/src/assets/images" />
       <recent name="$PROJECT_DIR$/android/app" />
-      <recent name="$PROJECT_DIR$/android/app/src" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -73,7 +73,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1735916603921</updated>
-      <workItem from="1735916605673" duration="47715000" />
+      <workItem from="1735916605673" duration="58330000" />
     </task>
     <servers />
   </component>

@@ -26,14 +26,14 @@ const Category = ({ route, navigation }: CategoryScreenProps) => {
   const getBrandImage = (brand: string) => {
     //TODO : 이미지 경로 수정할 것
     switch (brand) {
-      case "스타벅스":
-        return require('../../assets/images/cafe.png');
+      case "starbucks":
+        return require('../../assets/images/starbucks-logo.png');
       case "메가커피":
         return require('../../assets/images/cafe.png');
       case "투썸플레이스":
         return require('../../assets/images/cafe.png');
       default:
-        return require('../../assets/images/cafe.png');
+        return require('../../assets/images/starbucks-logo.png');
     }
   };
 
@@ -82,7 +82,6 @@ const Category = ({ route, navigation }: CategoryScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
         <FlatList
           // 렌더링할 데이터 // 렌더링이란 react-native에서 데이터를 시각적을 화면에 표시하는 과정
           // react-native 컴포넌트는 State와 Props를 기반으로 화면은 렌더링한다.
@@ -126,7 +125,7 @@ const Category = ({ route, navigation }: CategoryScreenProps) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ProductItem item={item} />}
         />
-      </ScrollView>
+
     </SafeAreaView>
   );
 };
@@ -138,16 +137,27 @@ const Category = ({ route, navigation }: CategoryScreenProps) => {
 // 컴포넌트를 감싸서, Prop가 변경되지 않으면 재렌더링을 방지한다.
 const ProductItem = memo(({ item }: { item: any }) => (
   <View style={styles.productContainer}>
-    <Image source={require('../../assets/images/cafe.png')} style={styles.productImage} />
+    {/* 제품 이미지 */}
+    <Image source={require('../../assets/images/starbucks-logo.png')} style={styles.productImage} />
+
     <View style={styles.productInfo}>
+      {/* 제품명 */}
       <Text style={styles.productTitle}>{item.name}</Text>
+
+      {/* ✅ 영양정보를 가로 2개 x 세로 3개로 정렬 */}
       <View style={styles.nutritionTable}>
-        <Text>칼로리: {item.kcal}kcal</Text>
-        <Text>당류: {item.sugar}g</Text>
-        <Text>단백질: {item.protein}g</Text>
-        <Text>나트륨: {item.sodium}mg</Text>
-        <Text>포화지방: {item.fat}g</Text>
-        <Text>카페인: {item.caffeine}mg</Text>
+        <View style={styles.nutritionRow}>
+          <Text style={styles.nutritionText}>칼로리: {item.kcal}kcal</Text>
+          <Text style={styles.nutritionText}>당류: {item.sugar}g</Text>
+        </View>
+        <View style={styles.nutritionRow}>
+          <Text style={styles.nutritionText}>단백질: {item.protein}g</Text>
+          <Text style={styles.nutritionText}>카페인: {item.caffeine}mg</Text>
+        </View>
+        <View style={styles.nutritionRow}>
+          <Text style={styles.nutritionText}>포화지방: {item.fat}g</Text>
+          <Text style={styles.nutritionText}>나트륨: {item.sodium}mg</Text>
+        </View>
       </View>
     </View>
   </View>
@@ -158,10 +168,38 @@ const styles = StyleSheet.create({
   brandButton: { flexDirection: 'row', alignItems: 'center', margin: 5 },
   brandImage: { width: 20, height: 20, marginRight: 5 },
   initialButton: { paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#fff', borderRadius: 15, borderWidth: 1, borderColor: '#ccc', marginHorizontal: 5 },
-  productContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9f9f9', padding: 10, marginVertical: 5, borderRadius: 10 },
+
+  productContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 10
+  },
   productImage: { width: 50, height: 50, marginRight: 15 },
   productInfo: { flex: 1 },
   productTitle: { fontSize: 16, fontWeight: 'bold' },
+
+  /* ✅ 영양정보 전체 컨테이너 */
+  nutritionTable: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+  },
+
+  /* ✅ 영양정보 한 줄 (2개씩) */
+  nutritionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+
+  /* ✅ 영양정보 스타일 */
+  nutritionText: {
+    fontSize: 12,
+    width: '48%', // 한 줄에 두 개 배치되도록 설정
+  },
 });
+
 
 export default Category;

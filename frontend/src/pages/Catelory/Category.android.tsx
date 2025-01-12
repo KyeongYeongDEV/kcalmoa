@@ -106,21 +106,23 @@ const Category = ({ route, navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : (
         <>
+          <TextInput
+
+            placeholder={"메뉴명을 입력하세요"}
+            style={styles.searchInput}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
           {/* ✅ 제품 리스트 */}
           <FlatList
             ref={listRef} // 🔥 리스트의 ref 연결
             data={filteredProducts}
             keyExtractor={(item) => item.id}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={5}
             ListHeaderComponent={
               <>
-                <TextInput
-
-                  placeholder={"메뉴명을 입력하세요"}
-                  style={styles.searchInput}
-                  value={searchText}
-                  onChangeText={setSearchText}
-                />
-
                 {/* ✅ 브랜드 선택 리스트 */}
                 <FlatList
                   data={brands}
@@ -175,9 +177,6 @@ const Category = ({ route, navigation }) => {
                 </View>
               </View>
             )}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            windowSize={5}
           />
         </>
       )}

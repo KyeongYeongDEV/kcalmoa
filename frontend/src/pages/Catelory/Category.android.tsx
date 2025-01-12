@@ -8,17 +8,21 @@ import {
   SafeAreaView,
   StyleSheet,
   Platform,
-  ActivityIndicator, ScrollView,
+  ActivityIndicator,
+  ScrollView,
+  TextInput
 } from 'react-native';
 import axios from 'axios';
 
+
 const Category = ({ route, navigation }) => {
   const category = route.params?.category || '카페';
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string>('starbucks');
   const [selectedInitial, setSelectedInitial] = useState<string | null>(null);
   const [starbucksData, setStarbucksData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const listRef = useRef<FlatList>(null); // 🔥 FlatList의 참조 추가
+  const [searchText, setSearchText] = useState('');
 
   const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080';
   const initials = ["전체", "ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
@@ -73,7 +77,7 @@ const Category = ({ route, navigation }) => {
   }, [starbucksData]);
 
   // ✅ 브랜드 리스트 (useMemo 적용)
-  const brands = useMemo(() => ['전체', ...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
+  const brands = useMemo(() => [...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
   // ✅ 필터링된 데이터 (useMemo 적용)
   const filteredProducts = useMemo(() => {
@@ -102,38 +106,50 @@ const Category = ({ route, navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : (
         <>
-          {/* ✅ 브랜드 선택 리스트 */}
-          <FlatList
-            data={brands}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleBrandSelect(item)} style={styles.brandButton}>
-                <Image source={brandImages[item] || brandImages.default} style={styles.brandImage} />
-                <Text>{item}</Text>
-              </TouchableOpacity>
-            )}
-          />
-
-          {/* ✅ 초성 선택 리스트 */}
-          <FlatList
-            data={initials}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setSelectedInitial(item === "전체" ? null : item)} style={styles.initialButton}>
-                <Text>{item}</Text>
-              </TouchableOpacity>
-            )}
-          />
-
           {/* ✅ 제품 리스트 */}
           <FlatList
             ref={listRef} // 🔥 리스트의 ref 연결
             data={filteredProducts}
             keyExtractor={(item) => item.id}
+            ListHeaderComponent={
+              <>
+                <TextInput
+
+                  placeholder={"메뉴명을 입력하세요"}
+                  style={styles.searchInput}
+                  value={searchText}
+                  onChangeText={setSearchText}
+                />
+
+                {/* ✅ 브랜드 선택 리스트 */}
+                <FlatList
+                  data={brands}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => handleBrandSelect(item)} style={styles.brandButton}>
+                      <Image source={brandImages[item] || brandImages.default} style={styles.brandImage} />
+                      <Text>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+
+                {/* ✅ 초성 선택 리스트 */}
+                <FlatList
+                  data={initials}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => setSelectedInitial(item === "전체" ? null : item)} style={styles.initialButton}>
+                      <Text>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </>
+            }
+
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
                 <Image source={brandImages[item.brand] || brandImages.default} style={styles.productImage} />
@@ -183,6 +199,16 @@ const styles = StyleSheet.create({
   productImage: { width: 50, height: 50, marginRight: 15 },
   productInfo: { flex: 1 },
   productTitle: { fontSize: 16, fontWeight: 'bold' },
+
+  searchInput: {
+    borderWidth: 1,
+    width: "98%",
+    padding: 10,
+    borderRadius: 15,
+    marginBottom: 10
+  },
+
+
   nutritionText: { fontSize: 12, marginVertical: 2 },
   nutritionTable: {
     flexDirection: 'column',

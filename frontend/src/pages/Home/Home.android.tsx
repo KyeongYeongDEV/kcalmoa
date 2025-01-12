@@ -1,4 +1,3 @@
-
 import { FlatList, Image, Text, TouchableOpacity, View, TextInput, SafeAreaView } from 'react-native';
 
 function Home({ navigation }) {

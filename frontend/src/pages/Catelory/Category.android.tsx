@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,9 @@ import {
   StyleSheet,
   Platform,
   ActivityIndicator,
-  ScrollView,
   TextInput
 } from 'react-native';
 import axios from 'axios';
-
 
 const Category = ({ route, navigation }) => {
   const category = route.params?.category || '카페';
@@ -21,7 +19,7 @@ const Category = ({ route, navigation }) => {
   const [selectedInitial, setSelectedInitial] = useState<string | null>(null);
   const [starbucksData, setStarbucksData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const listRef = useRef<FlatList>(null); // 🔥 FlatList의 참조 추가
+  const listRef = useRef<FlatList>(null);
   const [searchText, setSearchText] = useState('');
 
   const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080';
@@ -60,7 +58,6 @@ const Category = ({ route, navigation }) => {
     });
   }, [navigation, category]);
 
-  // ✅ 전체 데이터 (useMemo 적용)
   const allProducts = useMemo(() => {
     return (Array.isArray(starbucksData) ? starbucksData : []).map((item) => ({
       id: item.id?.toString() || "0",
@@ -76,24 +73,26 @@ const Category = ({ route, navigation }) => {
     }));
   }, [starbucksData]);
 
-  // ✅ 브랜드 리스트 (useMemo 적용)
   const brands = useMemo(() => [...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
-  // ✅ 필터링된 데이터 (useMemo 적용)
   const filteredProducts = useMemo(() => {
     return allProducts.filter((item) => {
       const matchesBrand = selectedBrand ? item.brand === selectedBrand : true;
       const matchesInitial = selectedInitial && selectedInitial !== "전체" ? item.initial === selectedInitial : true;
-      return matchesBrand && matchesInitial;
+      const matchesSearchText = searchText.trim() ? item.name.includes(searchText.trim()) : true;
+      return matchesBrand && matchesInitial && matchesSearchText;
     });
-  }, [selectedBrand, selectedInitial, allProducts]);
+  }, [selectedBrand, selectedInitial, searchText, allProducts]);
 
-  // ✅ 브랜드 선택 최적화 (useCallback 적용)
   const handleBrandSelect = useCallback((brand) => {
     setSelectedBrand((prevBrand) => (prevBrand === brand ? null : brand));
   }, []);
 
-  // ✅ 이미지 데이터 (객체로 저장, 불필요한 `useMemo` 제거)
+  const handelSearchTextChanged = (text : string) => {
+    setSelectedInitial('전체');
+    setSearchText(text);
+  }
+
   const brandImages = {
     starbucks: require('../../assets/images/starbucks-logo.png'),
     compose: require('../../assets/images/compose-logo.png'),
@@ -107,15 +106,13 @@ const Category = ({ route, navigation }) => {
       ) : (
         <>
           <TextInput
-
             placeholder={"메뉴명을 입력하세요"}
             style={styles.searchInput}
             value={searchText}
-            onChangeText={setSearchText}
+            onChangeText={handelSearchTextChanged}
           />
-          {/* ✅ 제품 리스트 */}
           <FlatList
-            ref={listRef} // 🔥 리스트의 ref 연결
+            ref={listRef}
             data={filteredProducts}
             keyExtractor={(item) => item.id}
             initialNumToRender={10}
@@ -123,7 +120,6 @@ const Category = ({ route, navigation }) => {
             windowSize={5}
             ListHeaderComponent={
               <>
-                {/* ✅ 브랜드 선택 리스트 */}
                 <FlatList
                   data={brands}
                   horizontal
@@ -136,8 +132,6 @@ const Category = ({ route, navigation }) => {
                     </TouchableOpacity>
                   )}
                 />
-
-                {/* ✅ 초성 선택 리스트 */}
                 <FlatList
                   data={initials}
                   horizontal
@@ -151,15 +145,11 @@ const Category = ({ route, navigation }) => {
                 />
               </>
             }
-
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
                 <Image source={brandImages[item.brand] || brandImages.default} style={styles.productImage} />
                 <View style={styles.productInfo}>
-                  {/* 제품명 */}
                   <Text style={styles.productTitle}>{item.name}</Text>
-
-                  {/* ✅ 영양정보를 가로 2개 x 세로 3개로 정렬 */}
                   <View style={styles.nutritionTable}>
                     <View style={styles.nutritionRow}>
                       <Text style={styles.nutritionText}>칼로리: {item.kcal}kcal</Text>

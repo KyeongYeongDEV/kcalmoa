@@ -8,13 +8,13 @@ import {
   SafeAreaView,
   StyleSheet,
   Platform,
-  ActivityIndicator,
+  ActivityIndicator, ScrollView,
 } from 'react-native';
 import axios from 'axios';
 
 const Category = ({ route, navigation }) => {
   const category = route.params?.category || '카페';
-  const [selectedBrand, setSelectedBrand] = useState<string>('starbucks');
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [selectedInitial, setSelectedInitial] = useState<string | null>(null);
   const [starbucksData, setStarbucksData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -73,8 +73,7 @@ const Category = ({ route, navigation }) => {
   }, [starbucksData]);
 
   // ✅ 브랜드 리스트 (useMemo 적용)
-  const brands = useMemo(() => Array.from(new Set(allProducts.map((item) => item.brand))), [allProducts]);
-
+  const brands = useMemo(() => ['전체', ...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
   // ✅ 필터링된 데이터 (useMemo 적용)
   const filteredProducts = useMemo(() => {

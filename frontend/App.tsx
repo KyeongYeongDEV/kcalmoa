@@ -5,8 +5,8 @@ import Search from './src/pages/Search';
 import { Image } from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Category from './src/pages/Catelory';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-// Tab Navigator 생성
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +18,9 @@ function HomeTabs() {
         component={Home}
         options={{
           headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -31,6 +34,9 @@ function HomeTabs() {
             />
           ),
           headerTitleAlign: 'center',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="search" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

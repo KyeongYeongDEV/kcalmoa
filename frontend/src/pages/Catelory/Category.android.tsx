@@ -17,7 +17,7 @@ const Category = ({ route, navigation }) => {
   const category = route.params?.category || '카페';
   const [selectedBrand, setSelectedBrand] = useState<string>('starbucks');
   const [selectedInitial, setSelectedInitial] = useState<string | null>(null);
-  const [starbucksData, setStarbucksData] = useState<any[]>([]);
+  const [cafeData, setCafeData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const listRef = useRef<FlatList>(null);
   const [searchText, setSearchText] = useState('');
@@ -36,10 +36,10 @@ const Category = ({ route, navigation }) => {
       setLoading(true);
       try {
         const response = await axios.get(`${BASE_URL}/cafe`);
-        setStarbucksData(Array.isArray(response.data) ? response.data : []);
+        setCafeData(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("🚨 Error fetching data:", error);
-        setStarbucksData([]);
+        setCafeData([]);
       } finally {
         setLoading(false);
       }
@@ -59,7 +59,7 @@ const Category = ({ route, navigation }) => {
   }, [navigation, category]);
 
   const allProducts = useMemo(() => {
-    return (Array.isArray(starbucksData) ? starbucksData : []).map((item) => ({
+    return (Array.isArray(cafeData) ? cafeData : []).map((item) => ({
       id: item.id?.toString() || "0",
       name: item.menu_name,
       brand: item.brand,
@@ -71,7 +71,7 @@ const Category = ({ route, navigation }) => {
       caffeine: item.caffeine,
       initial: getInitial(item.menu_name),
     }));
-  }, [starbucksData]);
+  }, [cafeData]);
 
   const brands = useMemo(() => [...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
@@ -88,7 +88,7 @@ const Category = ({ route, navigation }) => {
     setSelectedBrand((prevBrand) => (prevBrand === brand ? null : brand));
   }, []);
 
-  const handelSearchTextChanged = (text : string) => {
+  const handleSearchTextChanged = (text : string) => {
     setSelectedInitial('전체');
     setSearchText(text);
   }
@@ -109,7 +109,7 @@ const Category = ({ route, navigation }) => {
             placeholder={"메뉴명을 입력하세요"}
             style={styles.searchInput}
             value={searchText}
-            onChangeText={handelSearchTextChanged}
+            onChangeText={handleSearchTextChanged}
           />
           <FlatList
             ref={listRef}
@@ -138,7 +138,10 @@ const Category = ({ route, navigation }) => {
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item) => item}
                   renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => setSelectedInitial(item === "전체" ? null : item)} style={styles.initialButton}>
+                    <TouchableOpacity onPress={() => {
+                      setSelectedInitial(item === "전체" ? null : item);
+                      setSearchText("");}}
+                      style={styles.initialButton}>
                       <Text>{item}</Text>
                     </TouchableOpacity>
                   )}

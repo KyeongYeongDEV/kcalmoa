@@ -105,12 +105,6 @@ const Category = ({ route, navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : (
         <>
-          <TextInput
-            placeholder={"메뉴명을 입력하세요"}
-            style={styles.searchInput}
-            value={searchText}
-            onChangeText={handleSearchTextChanged}
-          />
           <FlatList
             ref={listRef}
             data={filteredProducts}
@@ -132,6 +126,14 @@ const Category = ({ route, navigation }) => {
                     </TouchableOpacity>
                   )}
                 />
+
+                <TextInput
+                  placeholder={"메뉴명을 입력하세요"}
+                  style={styles.searchInput}
+                  value={searchText}
+
+                />
+
                 <FlatList
                   data={initials}
                   horizontal
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 20, fontWeight: 'bold' },
-  brandButton: { flexDirection: 'row', alignItems: 'center', margin: 5 },
+  brandButton: { flexDirection: 'row', alignItems: 'center', margin: 5 , height :35},
   brandImage: { width: 20, height: 20, marginRight: 5 },
   initialButton: {
     width: 35, height: 35, borderRadius: 17.5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc',
@@ -195,9 +197,10 @@ const styles = StyleSheet.create({
   searchInput: {
     borderWidth: 1,
     width: "98%",
+    height: 37,
     padding: 10,
     borderRadius: 15,
-    marginBottom: 10
+    marginBottom: 5
   },
 
 

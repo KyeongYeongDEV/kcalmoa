@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   TextInput
 } from 'react-native';
+import FastImage from 'react-native-fast-image'
 import axios from 'axios';
 
 const Category = ({ route, navigation }) => {
@@ -69,6 +70,7 @@ const Category = ({ route, navigation }) => {
       sodium: item.sodium,
       fat: item.saturated_fat,
       caffeine: item.caffeine,
+      image : item.image,
       initial: getInitial(item.menu_name),
     }));
   }, [cafeData]);
@@ -76,7 +78,7 @@ const Category = ({ route, navigation }) => {
   const brands = useMemo(() => [...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((item) => {
+    return allProducts.filter((item) => { // 내가 선택한 브랜드. 초성, 검색어에 해당하는 상품인지 걸러줌
       const matchesBrand = selectedBrand ? item.brand === selectedBrand : true;
       const matchesInitial = selectedInitial && selectedInitial !== "전체" ? item.initial === selectedInitial : true;
       const matchesSearchText = searchText.trim() ? item.name.includes(searchText.trim()) : true;
@@ -92,6 +94,9 @@ const Category = ({ route, navigation }) => {
     setSelectedInitial('전체');
     setSearchText(text);
   }
+  useEffect(() => {
+    console.log("🔍 이미지 데이터:", cafeData.map(item => item.image));
+  }, [cafeData]);
 
   const brandImages = {
     starbucks: require('../../assets/images/starbucks-logo.png'),
@@ -105,6 +110,12 @@ const Category = ({ route, navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : (
         <>
+          <TextInput
+            placeholder={"메뉴명을 입력하세요"}
+            style={styles.searchInput}
+            value={searchText}
+            onChangeText={handleSearchTextChanged}
+          />
           <FlatList
             ref={listRef}
             data={filteredProducts}
@@ -121,19 +132,11 @@ const Category = ({ route, navigation }) => {
                   keyExtractor={(item) => item}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handleBrandSelect(item)} style={styles.brandButton}>
-                      <Image source={brandImages[item] || brandImages.default} style={styles.brandImage} />
+                      <FastImage source={brandImages[item] || brandImages.default} style={styles.brandImage} />
                       <Text>{item}</Text>
                     </TouchableOpacity>
                   )}
                 />
-
-                <TextInput
-                  placeholder={"메뉴명을 입력하세요"}
-                  style={styles.searchInput}
-                  value={searchText}
-
-                />
-
                 <FlatList
                   data={initials}
                   horizontal
@@ -152,7 +155,11 @@ const Category = ({ route, navigation }) => {
             }
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
-                <Image source={brandImages[item.brand] || brandImages.default} style={styles.productImage} />
+              {item.image ? (
+      <Image source={{ uri: "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000479]_20210426091843897.jpg" }} style={styles.productImage} />
+    ) : (
+      <Text>이미지가 없습니다.</Text>
+    )}
                 <View style={styles.productInfo}>
                   <Text style={styles.productTitle}>{item.name}</Text>
                   <View style={styles.nutritionTable}>
@@ -183,24 +190,23 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 20, fontWeight: 'bold' },
-  brandButton: { flexDirection: 'row', alignItems: 'center', margin: 5 , height :35},
+  brandButton: { flexDirection: 'row', alignItems: 'center', margin: 5 },
   brandImage: { width: 20, height: 20, marginRight: 5 },
   initialButton: {
     width: 35, height: 35, borderRadius: 17.5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc',
     justifyContent: 'center', alignItems: 'center', marginHorizontal: 5,
   },
   productContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9f9f9', padding: 10, marginVertical: 5, borderRadius: 10 },
-  productImage: { width: 50, height: 50, marginRight: 15 },
+  productImage: { width: 80, height: 80, marginRight: 15 },
   productInfo: { flex: 1 },
   productTitle: { fontSize: 16, fontWeight: 'bold' },
 
   searchInput: {
     borderWidth: 1,
     width: "98%",
-    height: 37,
     padding: 10,
     borderRadius: 15,
-    marginBottom: 5
+    marginBottom: 10
   },
 
 

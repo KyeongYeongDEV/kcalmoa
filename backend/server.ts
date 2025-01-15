@@ -52,25 +52,6 @@ app.get('/cafe', async (req: express.Request, res: express.Response) => {
     try {
         const [rows] = await pool.query(`SELECT * FROM category_cafe`);
         res.json(rows);
-        
-              //🔹 비동기적으로 이미지 업데이트 실행
-              setTimeout(async () => {
-                try {
-                  const imagePath = path.join(__dirname, 'starbucks_나이트바닐라크림.jpg');
-                  const imageBuffer = fs.readFileSync(imagePath); //버퍼를 이용해서 이미지를 저장
-                  
-                  const base64Image = `data:image/jpeg;base64,${imageBuffer.toString("base64")}`; // ✅ Base64 변환
-              
-                  const [result] = await pool.query(
-                    `UPDATE category_cafe SET image = ? WHERE menu_name = ?`,
-                    [base64Image, '나이트로 바닐라 크림']
-                  );                  
-                  console.log('✅ 이미지 업로드 성공');
-                 
-                } catch (error) {
-                  console.error('❌ 이미지 업로드 오류:', error);
-                }
-            }, 1000); // 🔥 응답 후 1초 뒤에 비동기 처리 (클라이언트 응답에 영향 없음)
     } catch (error) {
         console.error("DB Query Error:", error);
         res.status(500).json({ error: "Database query failed" });

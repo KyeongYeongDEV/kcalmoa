@@ -3,7 +3,8 @@ import http from 'http';
 import dotenv from 'dotenv';
 import pool from './mysql';
 import cors from 'cors'
-
+import swaggerUi from 'swagger-ui-express';
+const swaggerDocument = require("./swagger-output.json");
 import fs from "fs";
 import path from "path";
 
@@ -14,6 +15,7 @@ const server = http.createServer(app);
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ✅ CORS 요청을 로깅하는 미들웨어 추가
 app.use((req, res, next) => {
@@ -27,6 +29,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 허용할 HTTP 메서드 지정
     allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더 지정
 }));
+
 app.get("/upload-image", async (req, res) => {
   try {
     // ✅ 이미지 파일을 Base64로 변환
@@ -76,7 +79,6 @@ app.get('/cafe/image', async (req: express.Request, res: express.Response) => {
     res.status(500).json({ error: "서버 오류 발생" });
   }
 });
-
 
 
 

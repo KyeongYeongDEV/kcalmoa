@@ -24,6 +24,7 @@ const Category = ({ route, navigation }) => {
   const [searchText, setSearchText] = useState('');
 
   const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080';
+  const SERVER_URL = 'http://54.180.93.78:8080'
   const initials = ["전체", "ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
 
   const getInitial = (str: string) => {
@@ -36,7 +37,7 @@ const Category = ({ route, navigation }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BASE_URL}/cafe`);
+        const response = await axios.get(`${SERVER_URL}/cafe`);
         setCafeData(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("🚨 Error fetching data:", error);
@@ -94,9 +95,6 @@ const Category = ({ route, navigation }) => {
     setSelectedInitial('전체');
     setSearchText(text);
   }
-  useEffect(() => {
-    console.log("🔍 이미지 데이터:", cafeData.map(item => item.image));
-  }, [cafeData]);
 
   const brandImages = {
     starbucks: require('../../assets/images/starbucks-logo.png'),
@@ -156,9 +154,9 @@ const Category = ({ route, navigation }) => {
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
               {item.image ? (
-      <Image source={{ uri: "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000479]_20210426091843897.jpg" }} style={styles.productImage} />
+      <FastImage source={{ uri: item.image }} style={styles.productImage} />
     ) : (
-      <Text>이미지가 없습니다.</Text>
+      <FastImage source={brandImages['starbucks']}></FastImage>
     )}
                 <View style={styles.productInfo}>
                   <Text style={styles.productTitle}>{item.name}</Text>

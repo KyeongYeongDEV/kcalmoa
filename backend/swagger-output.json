@@ -1,0 +1,941 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Health Reminder API",
+    "description": "API for managing users, pill alarms, and hospital alarms",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/user/signIn": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User Login",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": { "type": "string", "example": "asdf" },
+                "userPw": { "type": "string", "example": "asdf" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login Successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "로그인 성공" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string" },
+                    "refreshToken": { "type": "string" },
+                    "userInfo": {
+                      "type": "object",
+                      "properties": {
+                        "u_id": { "type": "integer", "example": 1 },
+                        "userName": { "type": "string", "example": "ㅇㅇㅇ" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signUp": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User Registration",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userName": { "type": "string", "example": "ㅇㅇㅇ" },
+                "age": { "type": "integer", "example": 20 },
+                "userId": { "type": "string", "example": "asdf" },
+                "userPw": { "type": "string", "example": "asdf" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registration Successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "회원가입 성공" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "u_id": { "type": "integer", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signUp/idAvailable": {
+      "post": {
+        "tags": ["User"],
+        "summary": "When a user creates an ID, it will check if the ID is available.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": { "type": "string", "example": "asdf" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "id is available",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "해당 아이디는 사용 가능합니다" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string" },
+                    "refreshToken": { "type": "string" },
+                    "userInfo": {
+                      "type": "object",
+                      "properties": {
+                        "userId": { "type": "string", "example": "asdf" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/:u_id": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Provide information about a user",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "사용자 정보를 불러왔습니다" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "u_id": { "type": "integer", "example": 1 },
+                    "userName": { "type": "string", "example": "김ㅇㅇ" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alarm/pill/day/{u_id}/{date}": {
+      "get": {
+        "tags": ["Pill Alarm"],
+        "summary": "Retrieve Pill Alarm Information for a Specific Day",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Date in YYYY-MM-DD format"
+          }
+        ],
+      "responses": {
+          "200": {
+            "description": "Pill Alarm Information Retrieved and sorted in ascending order by time.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "하루 투약 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "dailyPillAlarmCount": { "type": "integer", "example": 2 },
+                    "alarms": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": { "type": "string", "example": "2025-01-17" },
+                          "hourTime": { "type": "integer", "example": 13 },
+                          "minTime": { "type": "integer", "example": 30 },
+                          "pillAlarmDetail": { "type": "string", "example": "감기약 2알" },
+                          "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "date": "2025-01-17",
+                          "hourTime": 13,
+                          "minTime": 30,
+                          "pillAlarmDetail": "감기약 2알",
+                          "addMemo" :  "당뇨약이랑 같이 먹지 말 것!" 
+                        },
+                        {
+                          "date": "2025-01-17",
+                          "hourTime": 20,
+                          "minTime": 20,
+                          "pillAlarmDetail": "당뇨약, 탈모약",
+                          "addMemo" :  "당뇨약이랑 같이 먹지 말 것!" 
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }   
+      }
+    },
+    "/alarm/pill/all/{u_id}": {
+      "get": {
+        "tags": ["Pill Alarm"],
+        "summary": "Retrieve All Pill Alarms for a User",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Information Retrieved and sorted in ascending order by data and time.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "전체 투약 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "alarms": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": { "type": "string", "example": "2025-01-17" },
+                          "hourTime": { "type": "integer", "example": 13 },
+                          "minTime": { "type": "integer", "example": 30 },
+                          "pillAlarmDetail": { "type": "string", "example": "감기약 2알" },
+                          "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "date": "2025-01-17",
+                          "hourTime": 13,
+                          "minTime": 30,
+                          "pillAlarmDetail": "감기약 2알",
+                          "addMemo" :  "당뇨약이랑 같이 먹지 말 것!" 
+                        },
+                        {
+                          "date": "2025-01-21",
+                          "hourTime": 20,
+                          "minTime": 20,
+                          "pillAlarmDetail": "당뇨약, 탈모약",
+                          "addMemo" :  "당뇨약이랑 같이 먹지 말 것!" 
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }  
+      }
+    },
+    "/alarm/pill/{u_id}": {
+      "post": {
+        "tags": ["Pill Alarm"],
+        "summary": "Register a Pill Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "startDay": { "type": "string", "example": "2025-01-13" },
+                "endDay": { "type": "string", "example": "2025-01-18" },
+                "hourTime" : { "type": "integer", "example": 12 },
+                "minTime" : { "type": "integer", "example": 30 },
+                "pillAlarmDetail": { "type": "string", "example": "감기약 2알, 타이에놀 1알" },
+                "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Successfully Registered",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "알람을 성공적으로 등록했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "pillAlarm_id": { "type": "integer", "example": 1 },
+                    "u_id": { "type": "integer", "example": 4 },
+                    "startDay": { "type": "string", "example": "2025-01-13" },
+                    "endDay": { "type": "string", "example": "2025-01-18" },
+                    "hourTime" : { "type": "integer", "example": 12 },
+                    "minTime" : { "type": "integer", "example": 30 },
+                    "pillAlarmDetail": { "type": "string", "example": "감기약 2알, 타이에놀 1알" },
+                    "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/alarm/pill/{u_id}/{pillAlarm_id}": {
+      "put": {
+        "tags": ["Pill Alarm"],
+        "summary": "Update a Pill Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },  {
+            "name": "pillAlarm_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pillAlarm_id": { "type": "integer", "example": 1 },
+                    "u_id": { "type": "integer", "example": 4 },
+                    "startDay": { "type": "string", "example": "2025-01-13" },
+                    "endDay": { "type": "string", "example": "2025-01-20" },
+                    "pillAlarmDetail": { "type": "string", "example": "타이에놀 1알" },
+                    "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Successfully Modify",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "알람을 성공적으로 수정했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "pillAlarm_id": { "type": "integer", "example": 1 },
+                    "u_id": { "type": "integer", "example": 4 },
+                    "startDay": { "type": "string", "example": "2025-01-13" },
+                    "endDay": { "type": "string", "example": "2025-01-20" },
+                    "pillAlarmDetail": { "type": "string", "example": "타이에놀 1알" },
+                    "addMemo" :  { "type": "string", "example": "당뇨약이랑 같이 먹지 말 것!" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+    "/alarm/pill/{u_id}/{:pillAlarm_id}": {
+      "delete": {
+        "tags": ["Pill Alarm"],
+        "summary": "Delete a Pill Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },  {
+            "name": "pillAlarm_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Successfully Delete",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "알람을 성공적으로 삭제했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "pillAlarm_id": { "type": "integer", "example": 1 },
+                    "u_id": { "type": "integer", "example": 4 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+
+    "/alarm/hospital/day/{u_id}/{date}": {
+      "get": {
+        "tags": ["Hospital Alarm"],
+        "summary": "Retrieve Hospital Alarm Information for a Specific Day",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Date in YYYY-MM-DD format"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hospital Alarm Information Retrieved and sorted in ascending order by time.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "당일 병원 예약 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "dailyHospitalAlarmCount": { "type": "integer", "example": 2 },
+                    "alarms": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                          "date": { "type": "string", "example": "2025-01-17" },
+                          "hourTime": { "type": "integer", "example": 13 },
+                          "minTime": { "type": "integer", "example": 30 },
+                          "hospitalName" : { "type": "string", "example": "복음병원" },
+                          "hospitalAlarmDetail": { "type": "string", "example": "정형외과 김ㅇㅇ 전문의" },
+                          "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "hospitalAlarm_id": 1 ,
+                          "date": "2025-01-17",
+                          "hourTime": 13,
+                          "minTime": 30,
+                          "hospitalName" : "복음병원",
+                          "hospitalAlarmDetail": "정형외과 김ㅇㅇ 전문의",
+                          "addMemo" :  "보험 서류 챙겨 가기!" 
+                        },
+                        {
+                          "hospitalAlarm_id": 2,
+                          "date": "2025-01-17",
+                          "hourTime": 16,
+                          "minTime": 20,
+                          "hospitalName" : "부산대병원",
+                          "hospitalAlarmDetail": "심장외과 박ㅇㅇ 전문의",
+                          "addMemo" :  "보험 서류 챙겨 가기!" 
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }   
+      }
+    },
+    "/alarm/hospital/all/{u_id}": {
+      "get": {
+        "tags": ["Hospital Alarm"],
+        "summary": "Retrieve All Pill Alarms for a User",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hospital Alarm Information Retrieved and sorted in ascending order by date and time",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "전체 병원 예약 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "alarms": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                          "date": { "type": "string", "example": "2025-01-17" },
+                          "hourTime": { "type": "integer", "example": 13 },
+                          "minTime": { "type": "integer", "example": 30 },
+                          "hospitalName" : { "type": "string", "example": "복음병원" },
+                          "hospitalAlarmDetail": { "type": "string", "example": "정형외과 김ㅇㅇ 전문의" },
+                          "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "hospitalAlarm_id": 1 ,
+                          "date": "2025-01-17",
+                          "hourTime": 13,
+                          "minTime": 30,
+                          "hospitalName" : "복음병원",
+                          "hospitalAlarmDetail": "정형외과 김ㅇㅇ 전문의",
+                          "addMemo" :  "보험 서류 챙겨 가기!" 
+                        },
+                        {
+                          "hospitalAlarm_id": 2 ,
+                          "date": "2025-01-25",
+                          "hourTime": 16,
+                          "minTime": 20,
+                          "hospitalName" : "부산대병원",
+                          "hospitalAlarmDetail": "심장외과 박ㅇㅇ 전문의",
+                          "addMemo" :  "보험 서류 챙겨 가기!" 
+                        },
+                        {
+                          "hospitalAlarm_id": 3,
+                          "date": "2025-02-07",
+                          "hourTime": 9,
+                          "minTime": 20,
+                          "hospitalName" : "부산대병원",
+                          "hospitalAlarmDetail": "심장외과 박ㅇㅇ 전문의",
+                          "addMemo" :  "보험 서류 챙겨 가기!" 
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } 
+      }
+    },
+
+    "/alarm/hospital/{u_id}": {
+      "post": {
+        "tags": ["Hospital Alarm"],
+        "summary": "Register a Pill Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                "date": { "type": "string", "example": "2025-01-17" },
+                "hourTime": { "type": "integer", "example": 13 },
+                "minTime": { "type": "integer", "example": 30 },
+                "hospitalName" : { "type": "string", "example": "복음병원" },
+                "hospitalAlarmDetail": { "type": "string", "example": "정형외과 김ㅇㅇ 전문의" },
+                "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Successfully Modified",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "알람을 성공적으로 수정했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "u_id": { "type": "integer", "example": 4 },
+                    "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                    "date": { "type": "string", "example": "2025-01-17" },
+                    "hourTime": { "type": "integer", "example": 13 },
+                    "minTime": { "type": "integer", "example": 30 },
+                    "hospitalName" : { "type": "string", "example": "복음병원" },
+                    "hospitalAlarmDetail": { "type": "string", "example": "정형외과 김ㅇㅇ 전문의" },
+                    "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+    "/alarm/hospital/{u_id}/{hospitalAlarm_id}": {
+      "put": {
+        "tags": ["Hospital Alarm"],
+        "summary": "Update a Hospital Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          },
+          {
+            "name": "hospitalAlarm_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Hospital Alarm ID"
+          },  
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                    "date": { "type": "string", "example": "2025-01-17" },
+                    "hourTime": { "type": "integer", "example": 13 },
+                    "minTime": { "type": "integer", "example" : 55},
+                    "hospitalName" : { "type": "string", "example": "복음병원" },
+                    "hospitalAlarmDetail": { "type": "string", "example" : "소화기내과 최ㅇㅇ 전문의"},
+                    "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pill Alarm Successfully Modified",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "알람을 성공적으로 수정했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hospitalAlarm_id": { "type": "integer", "example": 1 },
+                    "date": { "type": "string", "example": "2025-01-17" },
+                    "hourTime": { "type": "integer", "example": 13 },
+                    "minTime": { "type": "integer", "example" : 55},
+                    "hospitalName" : { "type": "string", "example": "복음병원" },
+                    "hospitalAlarmDetail": { "type": "string", "example" : "소화기내과 최ㅇㅇ 전문의"},
+                    "addMemo" :  { "type": "string", "example": "보험 서류 챙겨 가기!" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+   
+
+    "/alarm/hospital/{u_id}/{:hospitalAlarm_id}": {
+      "delete": {
+        "tags": ["Hospital Alarm"],
+        "summary": "Delete a Hospital Alarm",
+        "parameters": [
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "User ID"
+          }, {
+            "name": "hospitalAlarm_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Hospital Alarm ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hospital Alarm Successfully Delete",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "병원 예약 정보를 성공적으로 삭제했습니다." },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "u_id": { "type": "integer", "example": 4 },
+                    "hospitalAlarm_id": { "type": "integer", "example": 1 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/favorite/pill/:u_id": {
+      "get": {
+        "tags": ["Favorite"],
+        "summary": "Retrieve Pill Alarm Information for a Day",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Date in YYYY-MM-DD format"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved daily pill alarm",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "TODO : 수정해야 함" },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": { "type": "string", "example": "2025-01-17" },
+                      "hourTime": { "type": "integer", "example": 13 },
+                      "minTime": { "type": "integer", "example": 30 },
+                      "pillDetail": { "type": "string", "example": "감기약 2알" }
+                    }
+                  },
+                  "example": [
+                    {
+                      "date": "2025-01-17",
+                      "hourTime": 13,
+                      "minTime": 30,
+                      "pillDetail": "감기약 2알"
+                    },
+                    {
+                      "date": "2025-01-17",
+                      "hourTime": 20,
+                      "minTime": 20,
+                      "pillDetail": "당뇨약, 탈모약"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/pill/:pillName": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Retrieve pill information by searching with the pill name. ",
+        "parameters": [
+          {
+            "name": "pillName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "알레그라정"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved pill information by the pill name",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "검색한 약의 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "수정해야 함" : {"type": "string", "example": "어떤 정보가 있는지 알아보기" },
+                      "date": { "type": "string", "example": "2025-01-17" },
+                      "hourTime": { "type": "integer", "example": 13 },
+                      "minTime": { "type": "integer", "example": 30 },
+                      "pillDetail": { "type": "string", "example": "감기약 2알" }
+                    }
+                  },
+                  "example": [
+                    {
+                      "수정해야 함" : "어떤 정보가 있는지 알아보기",
+                      "date": "2025-01-17",
+                      "hourTime": 13,
+                      "minTime": 30,
+                      "pillDetail": "감기약 2알"
+                    },
+                    {
+                      "date": "2025-01-17",
+                      "hourTime": 20,
+                      "minTime": 20,
+                      "pillDetail": "당뇨약, 탈모약"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/pill/all": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Retrieve all of the pill information",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all of the pill information",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": true },
+                "message": { "type": "string", "example": "모든 약의 정보를 성공적으로 조회했습니다." },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "수정해야 함" : {"type": "string", "example": "어떤 정보가 있는지 알아보기" },
+                      "date": { "type": "string", "example": "2025-01-17" },
+                      "hourTime": { "type": "integer", "example": 13 },
+                      "minTime": { "type": "integer", "example": 30 },
+                      "pillDetail": { "type": "string", "example": "감기약 2알" }
+                    }
+                  },
+                  "example": [
+                    {
+                      "수정해야 함" : "어떤 정보가 있는지 알아보기",
+                      "date": "2025-01-17",
+                      "hourTime": 13,
+                      "minTime": 30,
+                      "pillDetail": "감기약 2알"
+                    },
+                    {
+                      "date": "2025-01-17",
+                      "hourTime": 20,
+                      "minTime": 20,
+                      "pillDetail": "당뇨약, 탈모약"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

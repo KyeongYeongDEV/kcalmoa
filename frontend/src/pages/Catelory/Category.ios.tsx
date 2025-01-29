@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   TextInput
 } from 'react-native';
+import FastImage from 'react-native-fast-image'
 import axios from 'axios';
 
 const Category = ({ route, navigation }) => {
@@ -23,6 +24,7 @@ const Category = ({ route, navigation }) => {
   const [searchText, setSearchText] = useState('');
 
   const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080';
+  const SERVER_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080';
   const initials = ["전체", "ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
 
   const getInitial = (str: string) => {
@@ -35,7 +37,7 @@ const Category = ({ route, navigation }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BASE_URL}/cafe`);
+        const response = await axios.get(`${SERVER_URL}/cafe`);
         setCafeData(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("🚨 Error fetching data:", error);
@@ -69,6 +71,7 @@ const Category = ({ route, navigation }) => {
       sodium: item.sodium,
       fat: item.saturated_fat,
       caffeine: item.caffeine,
+      image : item.image,
       initial: getInitial(item.menu_name),
     }));
   }, [cafeData]);
@@ -76,7 +79,7 @@ const Category = ({ route, navigation }) => {
   const brands = useMemo(() => [...Array.from(new Set(allProducts.map((item) => item.brand)))], [allProducts]);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((item) => {
+    return allProducts.filter((item) => { // 내가 선택한 브랜드. 초성, 검색어에 해당하는 상품인지 걸러줌
       const matchesBrand = selectedBrand ? item.brand === selectedBrand : true;
       const matchesInitial = selectedInitial && selectedInitial !== "전체" ? item.initial === selectedInitial : true;
       const matchesSearchText = searchText.trim() ? item.name.includes(searchText.trim()) : true;
@@ -127,14 +130,14 @@ const Category = ({ route, navigation }) => {
                   keyExtractor={(item) => item}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handleBrandSelect(item)} style={styles.brandButton}>
-                      <Image source={brandImages[item] || brandImages.default} style={styles.brandImage} />
+                      <FastImage source={brandImages[item] || brandImages.default} style={styles.brandImage} />
                       <Text>{item}</Text>
                     </TouchableOpacity>
                   )}
                 />
                 <FlatList
                   data={initials}
-          ㅇ        horizontal
+                  horizontal
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item) => item}
                   renderItem={({ item }) => (
@@ -150,7 +153,11 @@ const Category = ({ route, navigation }) => {
             }
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
-                <Image source={brandImages[item.brand] || brandImages.default} style={styles.productImage} />
+              {item.image ? (
+      <FastImage source={{ uri: item.image }} style={styles.productImage} />
+    ) : (
+      <FastImage source={brandImages['starbucks']}></FastImage>
+    )}
                 <View style={styles.productInfo}>
                   <Text style={styles.productTitle}>{item.name}</Text>
                   <View style={styles.nutritionTable}>
@@ -188,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center', marginHorizontal: 5,
   },
   productContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9f9f9', padding: 10, marginVertical: 5, borderRadius: 10 },
-  productImage: { width: 50, height: 50, marginRight: 15 },
+  productImage: { width: 80, height: 80, marginRight: 15 },
   productInfo: { flex: 1 },
   productTitle: { fontSize: 16, fontWeight: 'bold' },
 
